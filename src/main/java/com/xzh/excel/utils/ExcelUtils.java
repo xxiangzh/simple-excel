@@ -21,14 +21,40 @@ import java.util.List;
 public class ExcelUtils {
 
     /**
-     * 上传Excel文件，并解析成List
+     * 将Excel文件解析成List
      *
-     * @param file  文件
-     * @param clazz 类
-     * @param <T>   泛型
+     * @param pathName 文件路径（如 D:\test\xzh.xlsx）
+     * @param head     表头
+     * @param <T>      泛型
      * @return
      */
-    public static <T> List<T> upload(MultipartFile file, Class<T> clazz) {
+    public static <T> List<T> upload(String pathName, Class<T> head) {
+        List<T> list = new ArrayList<>();
+        AnalysisEventListener<T> analysisEventListener = new AnalysisEventListener<T>() {
+            @Override
+            public void invoke(T data, AnalysisContext context) {
+                log.info("解析到一条数据:{}", JSON.toJSONString(data));
+                list.add(data);
+            }
+
+            @Override
+            public void doAfterAllAnalysed(AnalysisContext context) {
+                log.info("所有数据解析完成！");
+            }
+        };
+        EasyExcel.read(pathName, head, analysisEventListener).sheet().doRead();
+        return list;
+    }
+
+    /**
+     * 将Excel文件解析成List
+     *
+     * @param file 文件
+     * @param head 表头
+     * @param <T>  泛型
+     * @return
+     */
+    public static <T> List<T> upload(MultipartFile file, Class<T> head) {
         List<T> list = new ArrayList<>();
         AnalysisEventListener<T> analysisEventListener = new AnalysisEventListener<T>() {
             @Override
@@ -43,11 +69,24 @@ public class ExcelUtils {
             }
         };
         try {
-            EasyExcel.read(file.getInputStream(), clazz, analysisEventListener).sheet().doRead();
+            EasyExcel.read(file.getInputStream(), head, analysisEventListener).sheet().doRead();
         } catch (IOException e) {
-            log.error("解析异常：", e);
+            log.error("upload-Exception：", e);
         }
         return list;
+    }
+
+    /**
+     * Excel文件下载
+     *
+     * @param pathName  文件路径
+     * @param sheetName 工作表名称
+     * @param data      数据
+     * @param head      表头
+     * @param <T>       泛型
+     */
+    public static <T> void download(String pathName, String sheetName, List<T> data, Class<T> head) {
+        EasyExcel.write(pathName, head).sheet(sheetName).doWrite(data);
     }
 
     /**
@@ -57,18 +96,18 @@ public class ExcelUtils {
      * @param excelName 文件名
      * @param sheetName 工作表名称
      * @param data      数据
-     * @param clazz     类
+     * @param head      表头
      * @param <T>       泛型
      */
-    public static <T> void download(HttpServletResponse response, String excelName, String sheetName, List<T> data, Class<T> clazz) {
+    public static <T> void download(HttpServletResponse response, String excelName, String sheetName, List<T> data, Class<T> head) {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("UTF-8");
         try {
             String fileName = URLEncoder.encode(excelName, "UTF-8");
             response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
-            EasyExcel.write(response.getOutputStream(), clazz).sheet(sheetName).doWrite(data);
+            EasyExcel.write(response.getOutputStream(), head).sheet(sheetName).doWrite(data);
         } catch (IOException e) {
-            log.error("下载异常：", e);
+            log.error("download-Exception：", e);
         }
     }
 }
