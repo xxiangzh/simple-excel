@@ -1,5 +1,6 @@
 package com.xzh.excel.model;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UploadData {
+
+    @ExcelProperty(value = "编码")
     private Long id;
+
+    @ExcelProperty(value = "名称")
     private String name;
 }

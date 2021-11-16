@@ -102,9 +102,10 @@ public class ExcelUtils {
     public static <T> void download(HttpServletResponse response, String excelName, String sheetName, List<T> data, Class<T> head) {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("UTF-8");
+        response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
         try {
             String fileName = URLEncoder.encode(excelName, "UTF-8");
-            response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
             EasyExcel.write(response.getOutputStream(), head).sheet(sheetName).doWrite(data);
         } catch (IOException e) {
             log.error("download-Exception：", e);
