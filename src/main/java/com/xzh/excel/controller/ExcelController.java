@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +25,18 @@ public class ExcelController {
     @ApiOperation("表格上传")
     @PostMapping("/upload")
     public String upload(@ApiParam("file") MultipartFile file) {
-        List<UploadData> upload = ExcelUtils.upload(file, UploadData.class);
+        List<UploadData> upload = ExcelUtils.resolve(file, UploadData.class);
         return "success";
     }
 
     @ApiOperation("表格下载")
     @PostMapping("/download")
-    public String download(HttpServletResponse response) {
+    public String download() {
         List<UploadData> data = new ArrayList<>();
         data.add(new UploadData(1L, "哈哈"));
         data.add(new UploadData(3L, "dfshg"));
         data.add(new UploadData(5L, "2333"));
-        ExcelUtils.download(response, "我是文件名", "我是工作表名称", data, UploadData.class);
+        ExcelUtils.export("我是文件名", data, UploadData.class);
         return "success";
     }
 }
