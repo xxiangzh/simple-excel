@@ -6,7 +6,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,18 +18,17 @@ import java.util.List;
  */
 @Api(tags = "表格")
 @RestController
-@RequestMapping("/excel")
 public class ExcelController {
 
     @ApiOperation("表格上传")
-    @PostMapping("/upload")
+    @PostMapping("/excel/upload")
     public String upload(@ApiParam("file") MultipartFile file) {
         List<UploadData> upload = ExcelUtils.resolve(file, UploadData.class);
         return "success";
     }
 
     @ApiOperation("表格下载")
-    @PostMapping("/download")
+    @PostMapping("/excel/download")
     public String download() {
         List<UploadData> data = new ArrayList<>();
         data.add(new UploadData(1L, "哈哈"));
