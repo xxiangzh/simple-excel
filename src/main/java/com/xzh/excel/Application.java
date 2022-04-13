@@ -1,5 +1,6 @@
 package com.xzh.excel;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author 向振华
  * @date 2021/04/22 09:04
  */
+@MapperScan("com.xzh.excel.**.mapper")
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
