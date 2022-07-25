@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xzh</groupId>
-    <artifactId>xzh-excel</artifactId>
+    <artifactId>simple-excel</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
