@@ -20,10 +20,10 @@ import java.util.List;
 @RestController
 public class ExcelController {
 
-    @ApiOperation("表格上传")
+    @ApiOperation("表格读取")
     @PostMapping("/excel/upload")
     public String upload(@ApiParam("file") MultipartFile file) {
-        List<UploadData> upload = ExcelUtils.resolve(file, UploadData.class);
+        List<UploadData> upload = ExcelUtils.read(file, UploadData.class);
         return "success";
     }
 
@@ -34,7 +34,7 @@ public class ExcelController {
         data.add(new UploadData(1L, "哈哈"));
         data.add(new UploadData(3L, "dfshg"));
         data.add(new UploadData(5L, "2333"));
-        ExcelUtils.export("我是文件名", data, UploadData.class);
+        ExcelUtils.write("我是文件名", data, UploadData.class);
         return "success";
     }
 }
